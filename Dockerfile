@@ -14,5 +14,6 @@ FROM node:20-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=build /app /app
+RUN mkdir -p /var/cache/polka-stock
 EXPOSE 4700
 CMD ["node", "apps/server/index.js"]

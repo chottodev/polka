@@ -8,6 +8,7 @@ const route = useRoute();
 const tabs = [
   { path: '/wxh', label: 'WxH' },
   { path: '/avatars', label: 'Аватары' },
+  { path: '/stock', label: 'Сток' },
 ];
 
 const activePath = computed(() => route.path);

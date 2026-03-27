@@ -35,6 +35,17 @@ const config = Object.freeze({
   publicOrigin: String(process.env.PUBLIC_ORIGIN || '').replace(/\/$/, ''),
   placeholderMaxWidth: intEnv('PLACEHOLDER_MAX_WIDTH', 4000, 1, 32000),
   placeholderMaxHeight: intEnv('PLACEHOLDER_MAX_HEIGHT', 4000, 1, 32000),
+  freepikApiKey: String(process.env.FREEPIK_API_KEY || ''),
+  stockMaxWidth: intEnv('STOCK_MAX_WIDTH', 4096, 1, 32000),
+  stockMaxHeight: intEnv('STOCK_MAX_HEIGHT', 4096, 1, 32000),
+  stockCacheDir: path.isAbsolute(String(process.env.STOCK_CACHE_DIR || ''))
+    ? String(process.env.STOCK_CACHE_DIR)
+    : path.resolve(repoRoot, String(process.env.STOCK_CACHE_DIR || '.cache/polka-stock')),
+  stockCacheTtlSec: intEnv('STOCK_CACHE_TTL_SEC', 2592000, 60, 31536000),
+  stockProviderTimeoutMs: intEnv('STOCK_PROVIDER_TIMEOUT_MS', 6000, 100, 20000),
+  stockDefaultFormat: String(process.env.STOCK_DEFAULT_FORMAT || 'webp'),
+  stockDefaultQuality: intEnv('STOCK_DEFAULT_QUALITY', 82, 1, 100),
+  stockFallbackText: String(process.env.STOCK_FALLBACK_TEXT || 'no image'),
 });
 
 module.exports = { config, repoRoot };

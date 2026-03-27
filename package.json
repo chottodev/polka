@@ -12,7 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker:build": "./build.sh",
     "build": "npm run build -w @polka/ui",
-    "start": "npm run start -w @polka/server"
+    "start": "npm run start -w @polka/server",
+    "cron:cleanup-cache": "node scripts/cleanup-cache.js"
   },
   "author": "",
   "license": "ISC"
