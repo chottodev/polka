@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
 
-const baseUrl = ref(typeof window !== 'undefined' ? window.location.origin : '');
 const width = ref(400);
 const height = ref(300);
 const usePathText = ref(false);
@@ -62,16 +61,11 @@ const builtPath = computed(() => {
   return qs ? `${p}?${qs}` : p;
 });
 
-const fullUrl = computed(() => {
-  const b = baseUrl.value.replace(/\/$/, '');
-  return b ? `${b}${builtPath.value}` : builtPath.value;
-});
-
 const copyState = ref('');
 
 async function copyUrl() {
   try {
-    await navigator.clipboard.writeText(fullUrl.value);
+    await navigator.clipboard.writeText(builtPath.value);
     copyState.value = 'Скопировано';
     setTimeout(() => {
       copyState.value = '';
@@ -79,6 +73,10 @@ async function copyUrl() {
   } catch {
     copyState.value = 'Не удалось скопировать';
   }
+}
+
+function openInNewTab() {
+  window.open(builtPath.value, '_blank', 'noopener,noreferrer');
 }
 </script>
 
@@ -89,11 +87,6 @@ async function copyUrl() {
 
     <div class="wxh-layout">
       <div class="wxh-form">
-        <label class="field">
-          <span class="field__label">Базовый URL (для копирования)</span>
-          <input v-model="baseUrl" type="text" class="field__input" autocomplete="off" placeholder="http://localhost:4700" />
-        </label>
-
         <div class="row">
           <label class="field field--half">
             <span class="field__label">Ширина</span>
@@ -165,9 +158,35 @@ async function copyUrl() {
         <div class="url-row">
           <label class="field field--grow">
             <span class="field__label">Итоговый URL</span>
-            <input :value="fullUrl" type="text" readonly class="field__input field__input--mono" />
+            <input :value="builtPath" type="text" readonly class="field__input field__input--mono" />
           </label>
-          <button type="button" class="btn" @click="copyUrl">{{ copyState || 'Копировать' }}</button>
+          <div class="icon-actions">
+            <button
+              type="button"
+              class="btn btn--icon"
+              :title="copyState || 'Скопировать URL'"
+              aria-label="Скопировать URL"
+              @click="copyUrl"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 9h10v12H9z" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M5 3h10v12" fill="none" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="btn btn--icon btn--icon-secondary"
+              title="Открыть в новой вкладке"
+              aria-label="Открыть в новой вкладке"
+              @click="openInNewTab"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 4h6v6" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M10 14L20 4" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 14v6H4V4h6" fill="none" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="preview">
@@ -324,6 +343,32 @@ async function copyUrl() {
 
 .btn:hover {
   filter: brightness(1.05);
+}
+
+.btn--icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn--icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.btn--icon-secondary {
+  background: #fff;
+  color: var(--accent);
+  border: 1px solid var(--accent-soft);
+}
+
+.icon-actions {
+  display: inline-flex;
+  gap: 0.4rem;
 }
 
 .wxh-aside .preview {

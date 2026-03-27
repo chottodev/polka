@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const { initialize } = require('express-openapi');
-const { generatePlaceholder } = require('@polka/generator');
+const { generatePlaceholder, generateAvatarInitials, generateAvatarVector } = require('@polka/generator');
 const { config, repoRoot } = require('@polka/config');
 
 const rootPkg = require(path.join(repoRoot, 'package.json'));
@@ -25,6 +25,8 @@ async function main() {
     paths: path.join(__dirname, 'routes'),
     dependencies: {
       generatePlaceholder,
+      generateAvatarInitials,
+      generateAvatarVector,
       config,
     },
     exposeApiDocs: false,
@@ -54,8 +56,8 @@ async function main() {
     if (req.method !== 'GET') return next();
     const p = req.path;
     if (p.startsWith('/docs') || p === '/openapi.json' || p === '/health') return next();
-    /* Let express-openapi handle /wxh/:width/:height (+ optional :text); everything else under /wxh is SPA */
-    if (/^\/wxh\/\d+\/\d+/.test(p)) return next();
+    /* Let express-openapi handle /wxh/* and /avatars/* API paths; base /wxh and /avatars stay SPA. */
+    if (/^\/wxh\/\d+\/\d+/.test(p) || /^\/avatars\/(initials|vector)\//.test(p)) return next();
     res.sendFile(path.join(publicDir, 'index.html'), (err) => {
       if (err) next(err);
     });

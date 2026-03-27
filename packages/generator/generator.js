@@ -3,6 +3,19 @@
  * Pure SVG — no native image dependencies required.
  */
 
+const { generateAvatarInitials } = require('./avatar/initials');
+const { generateAvatarVectorHuman } = require('./avatar/vectorHuman');
+const { generateAvatarVectorAnimal } = require('./avatar/vectorAnimal');
+const {
+  AVATAR_KIND_KEYS,
+  AVATAR_ANIMAL_KIND_KEYS,
+  AVATAR_HUMAN_KIND_KEYS,
+  AVATAR_STYLE_KEYS,
+  AVATAR_PALETTE_KEYS,
+  AVATAR_SIZE_PRESET_VALUES,
+} = require('./avatar/constants');
+const { AVATAR_FAMILY_KEYS } = require('./avatar/utils');
+
 function clamp(val, min, max) {
   return Math.max(min, Math.min(max, val));
 }
@@ -102,20 +115,23 @@ function generatePlaceholder({
 }
 
 // ── Avatar (circle with initials) ────────────────────────────────────
-function generateAvatar({ initials, bg, fg, size, fontSize }) {
-  size = clamp(parseInt(size) || 128, 16, 2000);
-  bg = bg || '3498db';
-  fg = fg || 'ffffff';
-  initials = (initials || '?').toUpperCase().slice(0, 3);
-  fontSize = parseInt(fontSize) || Math.floor(size * 0.42);
+function generateAvatar({ initials, bg, fg, size, fontSize, family, palette }) {
+  return generateAvatarInitials({
+    text: initials,
+    bg,
+    fg,
+    size,
+    font: fontSize,
+    family,
+    palette,
+  });
+}
 
-  const r = size / 2;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <circle cx="${r}" cy="${r}" r="${r}" fill="#${bg}"/>
-  <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle"
-        font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="${fontSize}" fill="#${fg}">${escapeXml(initials)}</text>
-</svg>`;
+function generateAvatarVector({ kind, size, palette, style, bg, fg, seed }) {
+  if (AVATAR_HUMAN_KIND_KEYS.includes(String(kind))) {
+    return generateAvatarVectorHuman({ kind, size, palette, style, bg, fg, seed });
+  }
+  return generateAvatarVectorAnimal({ kind, size, palette, style, bg, fg, seed });
 }
 
 // ── Pattern placeholder ──────────────────────────────────────────────
@@ -170,6 +186,17 @@ function generatePattern({ width, height, bg, fg, pattern, rounded }) {
 module.exports = {
   generatePlaceholder,
   generateAvatar,
+  generateAvatarInitials,
+  generateAvatarVector,
+  generateAvatarVectorHuman,
+  generateAvatarVectorAnimal,
   generatePattern,
   WXH_FONT_FAMILY_KEYS,
+  AVATAR_FAMILY_KEYS,
+  AVATAR_KIND_KEYS,
+  AVATAR_ANIMAL_KIND_KEYS,
+  AVATAR_HUMAN_KIND_KEYS,
+  AVATAR_STYLE_KEYS,
+  AVATAR_PALETTE_KEYS,
+  AVATAR_SIZE_PRESET_VALUES,
 };
