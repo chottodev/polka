@@ -19,8 +19,34 @@ function escapeXml(str) {
 function autoFontSize(width, height, text) {
   const maxDim = Math.min(width, height);
   const charCount = text.length || 1;
-  // Scale font relative to the shorter dimension, shrink for longer text
   return clamp(Math.floor(maxDim / (charCount * 0.6 + 1)), 10, maxDim * 0.8);
+}
+
+/** 15 пресетов для query `family` — безопасные font-family stacks для SVG. */
+const FONT_FAMILY_STACKS = Object.freeze({
+  system: 'system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+  arial: 'Arial, Helvetica, sans-serif',
+  georgia: 'Georgia, Times New Roman, Times, serif',
+  times: 'Times New Roman, Times, serif',
+  courier: 'Courier New, Courier, monospace',
+  verdana: 'Verdana, Geneva, sans-serif',
+  trebuchet: 'Trebuchet MS, Helvetica, sans-serif',
+  tahoma: 'Tahoma, Geneva, sans-serif',
+  palatino: 'Palatino, Palatino Linotype, serif',
+  garamond: 'Garamond, serif',
+  lucida: 'Lucida Console, Lucida Sans Typewriter, monospace',
+  impact: 'Impact, Haettenschweiler, Arial Narrow, sans-serif',
+  comic: 'Comic Sans MS, Comic Sans, cursive',
+  segoe: 'Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+  helvetica: 'Helvetica, Arial, sans-serif',
+});
+
+const WXH_FONT_FAMILY_KEYS = Object.freeze(Object.keys(FONT_FAMILY_STACKS));
+
+function resolvePlaceholderFontFamily(family) {
+  if (family == null || family === '') return FONT_FAMILY_STACKS.arial;
+  const k = String(family).toLowerCase();
+  return FONT_FAMILY_STACKS[k] || FONT_FAMILY_STACKS.arial;
 }
 
 // ── Basic placeholder ────────────────────────────────────────────────
@@ -32,6 +58,7 @@ function generatePlaceholder({
   text,
   rounded,
   fontSize,
+  family,
   gradient,
   maxWidth = 4000,
   maxHeight = 4000,
@@ -45,12 +72,12 @@ function generatePlaceholder({
   text = text || `${width}×${height}`;
   rounded = parseInt(rounded) || 0;
   fontSize = parseInt(fontSize) || autoFontSize(width, height, text);
+  const fontStack = resolvePlaceholderFontFamily(family);
 
   let bgFill;
   let defs = '';
 
   if (gradient) {
-    // gradient format: "dir-color1-color2"  e.g. "h-3498db-2ecc71" or "v-e74c3c-8e44ad"
     const parts = gradient.split('-');
     const dir = parts[0] || 'h';
     const c1 = parts[1] || bg;
@@ -70,7 +97,7 @@ function generatePlaceholder({
   ${defs}
   <rect width="${width}" height="${height}" fill="${bgFill}" rx="${rounded}" ry="${rounded}"/>
   <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle"
-        font-family="Arial, Helvetica, sans-serif" font-size="${fontSize}" fill="#${fg}">${escapeXml(text)}</text>
+        font-family='${fontStack}' font-size="${fontSize}" fill="#${fg}">${escapeXml(text)}</text>
 </svg>`;
 }
 
@@ -140,4 +167,9 @@ function generatePattern({ width, height, bg, fg, pattern, rounded }) {
 </svg>`;
 }
 
-module.exports = { generatePlaceholder, generateAvatar, generatePattern };
+module.exports = {
+  generatePlaceholder,
+  generateAvatar,
+  generatePattern,
+  WXH_FONT_FAMILY_KEYS,
+};

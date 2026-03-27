@@ -21,8 +21,8 @@ HTTP-сервис с **placeholder-контентом**: SVG-картинки з
 | GET | `/health` | Проверка живости |
 | GET | `/openapi.json` | Сводная OpenAPI 3 |
 | GET | `/docs` | Swagger UI |
-| GET | `/wxh/:width/:height` | SVG плейсхолдер; query: `bg`, `fg`, `text`, `rounded`, `font`, `gradient` |
-| GET | `/wxh/:width/:height/:text` | То же, подпись в path (URL-encoding) |
+| GET | `/wxh/:width/:height` | SVG плейсхолдер; query: `bg`, `fg`, `text`, `rounded`, `font` (размер, px), `family` (гарнитура, 15 пресетов), `gradient` |
+| GET | `/wxh/:width/:height/:text` | То же, подпись в path (URL-encoding); те же query |
 
 Аватары и паттерны в генераторе (`packages/generator/generator.js`) пока **не** выведены на отдельные HTTP-префиксы в сервере — только WxH по плану фазы B.
 

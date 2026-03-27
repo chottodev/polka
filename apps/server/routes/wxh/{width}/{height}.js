@@ -1,13 +1,6 @@
 'use strict';
 
-const queryParams = [
-  { name: 'bg', in: 'query', required: false, schema: { type: 'string', description: 'Цвет фона hex без #' } },
-  { name: 'fg', in: 'query', required: false, schema: { type: 'string', description: 'Цвет текста hex без #' } },
-  { name: 'text', in: 'query', required: false, schema: { type: 'string' } },
-  { name: 'rounded', in: 'query', required: false, schema: { type: 'integer', minimum: 0 } },
-  { name: 'font', in: 'query', required: false, schema: { type: 'integer', description: 'Размер шрифта' } },
-  { name: 'gradient', in: 'query', required: false, schema: { type: 'string', description: 'h|v-color1-color2' } },
-];
+const { queryParamsPlain } = require('../../../lib/wxhQueryParams');
 
 module.exports = function wxhPlain(generatePlaceholder, config) {
   function GET(req, res) {
@@ -19,7 +12,7 @@ module.exports = function wxhPlain(generatePlaceholder, config) {
     if (!Number.isInteger(h) || h < 1 || h > config.placeholderMaxHeight) {
       return res.status(400).json({ error: 'Неверная высота' });
     }
-    const { bg, fg, text, rounded, font, gradient } = req.query;
+    const { bg, fg, text, rounded, font, family, gradient } = req.query;
     const svg = generatePlaceholder({
       width: w,
       height: h,
@@ -28,6 +21,7 @@ module.exports = function wxhPlain(generatePlaceholder, config) {
       text,
       rounded,
       fontSize: font,
+      family,
       gradient,
       maxWidth: config.placeholderMaxWidth,
       maxHeight: config.placeholderMaxHeight,
@@ -54,7 +48,7 @@ module.exports = function wxhPlain(generatePlaceholder, config) {
         required: true,
         schema: { type: 'integer', minimum: 1, maximum: 32000 },
       },
-      ...queryParams,
+      ...queryParamsPlain,
     ],
     responses: {
       200: {

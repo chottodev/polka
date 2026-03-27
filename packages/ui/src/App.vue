@@ -16,16 +16,18 @@ const activePath = computed(() => route.path);
 <template>
   <div class="page">
     <header class="header">
-      <div class="header__top">
-        <h1 class="logo">Polka</h1>
-        <span class="version">v{{ version }}</span>
+      <div class="header__bar">
+        <div class="header__brand">
+          <h1 class="logo">Polka</h1>
+          <span class="version">v{{ version }}</span>
+        </div>
+        <nav class="tabs" aria-label="Разделы">
+          <RouterLink v-for="t in tabs" :key="t.path" :to="t.path" class="tab" :class="{ 'tab--active': activePath === t.path }">
+            {{ t.label }}
+          </RouterLink>
+        </nav>
+        <a class="api-link" href="/docs" target="_blank" rel="noopener noreferrer">Документация API</a>
       </div>
-      <a class="api-link" href="/docs" target="_blank" rel="noopener noreferrer">Документация API</a>
-      <nav class="tabs" aria-label="Разделы">
-        <RouterLink v-for="t in tabs" :key="t.path" :to="t.path" class="tab" :class="{ 'tab--active': activePath === t.path }">
-          {{ t.label }}
-        </RouterLink>
-      </nav>
     </header>
 
     <main class="main">
@@ -75,41 +77,52 @@ body {
 }
 
 .header {
-  padding: 1.75rem clamp(1rem, 4vw, 2rem) 1rem;
+  padding: 0.55rem clamp(1rem, 4vw, 2rem);
   border-bottom: 1px solid var(--border);
   background: rgba(255, 253, 250, 0.72);
   backdrop-filter: blur(10px);
 }
 
-.header__top {
+.header__bar {
   display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
+  align-items: center;
   flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  width: 100%;
+  max-width: min(72rem, 100%);
+  margin: 0 auto;
+}
+
+.header__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 .logo {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: 1.35rem;
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1;
 }
 
 .version {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
 
 .api-link {
-  display: inline-block;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--accent);
   text-decoration: none;
   font-weight: 600;
+  white-space: nowrap;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .api-link:hover {
@@ -118,20 +131,20 @@ body {
 
 .tabs {
   display: flex;
-  gap: 0.25rem;
-  margin-top: 1.25rem;
-  padding: 0.2rem;
+  gap: 0.2rem;
+  padding: 0.15rem;
   background: var(--border);
   border-radius: 999px;
   width: fit-content;
+  flex-shrink: 0;
 }
 
 .tab {
-  padding: 0.45rem 1.15rem;
+  padding: 0.3rem 0.85rem;
   border-radius: 999px;
   text-decoration: none;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -152,7 +165,7 @@ body {
 }
 
 .column {
-  max-width: 42rem;
+  max-width: min(72rem, 100%);
   margin: 0 auto;
 }
 </style>
