@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
+import ColorPickerButton from '../components/ColorPickerButton.vue';
 
 const baseOrigin = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : '';
 const mode = ref('initials');
@@ -136,11 +137,17 @@ function openInNewTab() {
         <div class="row">
           <label class="field field--half">
             <span class="field__label">bg (hex)</span>
-            <input v-model="bg" class="field__input" placeholder="из палитры" />
+            <div class="input-addon">
+              <input v-model="bg" class="field__input input-addon__input" placeholder="из палитры" />
+              <ColorPickerButton v-model="bg" />
+            </div>
           </label>
           <label class="field field--half">
             <span class="field__label">fg (hex)</span>
-            <input v-model="fg" class="field__input" placeholder="из палитры" />
+            <div class="input-addon">
+              <input v-model="fg" class="field__input input-addon__input" placeholder="из палитры" />
+              <ColorPickerButton v-model="fg" />
+            </div>
           </label>
         </div>
 
@@ -311,6 +318,19 @@ function openInNewTab() {
   font-family: ui-monospace, monospace;
   font-size: 0.82rem;
 }
+
+.input-addon {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.input-addon__input {
+  flex: 1;
+  min-width: 0;
+}
+
 .row {
   display: flex;
   gap: 0.75rem;

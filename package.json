@@ -16,5 +16,8 @@
     "cron:cleanup-cache": "node scripts/cleanup-cache.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@cyhnkckali/vue3-color-picker": "^2.1.7"
+  }
 }

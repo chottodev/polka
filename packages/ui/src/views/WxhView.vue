@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
+import ColorPickerButton from '../components/ColorPickerButton.vue';
 
 const baseOrigin = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : '';
 const width = ref(400);
@@ -123,11 +124,17 @@ function openInNewTab() {
         <div class="row">
           <label class="field field--half">
             <span class="field__label">Фон <code>bg</code> (hex)</span>
-            <input v-model="bg" type="text" class="field__input" placeholder="cccccc" />
+            <div class="input-addon">
+              <input v-model="bg" type="text" class="field__input input-addon__input" placeholder="cccccc" />
+              <ColorPickerButton v-model="bg" />
+            </div>
           </label>
           <label class="field field--half">
             <span class="field__label">Текст <code>fg</code> (hex)</span>
-            <input v-model="fg" type="text" class="field__input" placeholder="333333" />
+            <div class="input-addon">
+              <input v-model="fg" type="text" class="field__input input-addon__input" placeholder="333333" />
+              <ColorPickerButton v-model="fg" />
+            </div>
           </label>
         </div>
 
@@ -298,6 +305,18 @@ function openInNewTab() {
 .field__input--mono {
   font-family: ui-monospace, monospace;
   font-size: 0.82rem;
+}
+
+.input-addon {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.input-addon__input {
+  flex: 1;
+  min-width: 0;
 }
 
 .row {
