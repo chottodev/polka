@@ -5,7 +5,7 @@ import ColorPickerButton from '../components/ColorPickerButton.vue';
 const baseOrigin = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : '';
 const mode = ref('initials');
 
-const size = ref(48);
+const size = ref(256);
 const palette = ref('soft');
 const bg = ref('');
 const fg = ref('');
@@ -17,6 +17,7 @@ const font = ref('');
 
 const vectorKind = ref('male');
 const style = ref('flat');
+const shape = ref('round');
 
 const familyOptions = [
   { value: 'system', label: 'Системный' },
@@ -38,6 +39,8 @@ const familyOptions = [
 
 const sizeOptions = [16, 32, 48, 64, 72, 96, 128, 192, 256, 384, 512];
 const styleOptions = [
+  { value: 'round', label: 'Round' },
+  { value: 'square', label: 'Square' },
   { value: 'flat', label: 'Flat' },
   { value: 'outline', label: 'Outline' },
   { value: 'duotone', label: 'Duotone' },
@@ -76,6 +79,19 @@ const builtPath = computed(() => {
 
   if (style.value) q.set('style', style.value);
   return `/avatars/vector/${vectorKind.value}?${q.toString()}`;
+});
+
+const styleMenu = computed({
+  get() {
+    return shape.value === 'round' || shape.value === 'square' ? shape.value : style.value;
+  },
+  set(v) {
+    if (v === 'round' || v === 'square') {
+      shape.value = v;
+      return;
+    }
+    style.value = v;
+  },
 });
 
 const fullUrl = computed(() => (baseOrigin ? `${baseOrigin}${builtPath.value}` : builtPath.value));
@@ -178,7 +194,7 @@ function openInNewTab() {
           </label>
           <label class="field field--half">
             <span class="field__label">Стиль</span>
-            <select v-model="style" class="field__input field__select">
+            <select v-model="styleMenu" class="field__input field__select">
               <option v-for="s in styleOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
             </select>
           </label>
@@ -227,7 +243,12 @@ function openInNewTab() {
         <div class="preview">
           <span class="field__label">Превью</span>
           <div class="preview__box">
-            <img :src="editableUrl" alt="Превью аватара" class="preview__img" />
+            <img
+              :src="editableUrl"
+              alt="Превью аватара"
+              class="preview__img"
+              :class="{ 'preview__img--round': shape === 'round' }"
+            />
           </div>
         </div>
       </aside>
@@ -386,5 +407,8 @@ function openInNewTab() {
   max-width: 100%;
   height: auto;
   margin: 0 auto;
+}
+.preview__img--round {
+  border-radius: 50%;
 }
 </style>
