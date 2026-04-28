@@ -73,6 +73,11 @@ function manBgHex(seed, explicitBg) {
   return normalizeHex(explicitBg, fallback);
 }
 
+function paintManBaseInner(inner, bgHex) {
+  return inner
+    .replace(/fill="#ADD0DF"/gi, `fill="#${bgHex}"`);
+}
+
 
 
 function paintManClothInner(inner, seed) {
@@ -250,7 +255,7 @@ function paintManGlassesInner(inner, seed) {
 function generateAvatarVectorMan({ size, bg, seed = '' }) {
   const s = parseSize(size, 32, 1024, 128);
   const bgHex = manBgHex(seed, bg);
-  const baseInner = stripInkscapeSodipodiMarkup(readSvgInner('base.svg'));
+  const baseInner = paintManBaseInner(stripInkscapeSodipodiMarkup(readSvgInner('base.svg')), bgHex);
   const hairBrowFillHex = pickManHairBrowFillHex(seed);
   const browRel = BROWS_FILES[seededIndex(String(seed) + ':man-brow', BROWS_FILES.length)];
   const browsInner = paintManBrowInner(stripInkscapeSodipodiMarkup(readSvgInner(browRel)), hairBrowFillHex);

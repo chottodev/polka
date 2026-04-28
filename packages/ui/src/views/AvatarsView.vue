@@ -16,7 +16,7 @@ const family = ref('arial');
 const font = ref('');
 
 const vectorKind = ref('man');
-const style = ref('flat');
+const style = ref('round');
 const shape = ref('round');
 
 const familyOptions = [
@@ -41,9 +41,6 @@ const sizeOptions = [16, 32, 48, 64, 72, 96, 128, 192, 256, 384, 512];
 const styleOptions = [
   { value: 'round', label: 'Round' },
   { value: 'square', label: 'Square' },
-  { value: 'flat', label: 'Flat' },
-  { value: 'outline', label: 'Outline' },
-  { value: 'duotone', label: 'Duotone' },
 ];
 const paletteOptions = [
   { value: 'soft', label: 'Soft' },
@@ -55,7 +52,6 @@ const paletteOptions = [
 const vectorKinds = [
   { value: 'man', label: 'Мужской' },
   { value: 'female', label: 'Женский' },
-  { value: 'neutral', label: 'Нейтральный' },
   { value: 'cat', label: 'Cat' },
   { value: 'dog', label: 'Dog' },
   { value: 'panda', label: 'Panda' },
@@ -78,7 +74,7 @@ const builtPath = computed(() => {
     return `/avatars/initials/${text}?${q.toString()}`;
   }
 
-  if (style.value) q.set('style', style.value);
+  if (style.value) q.set('style', styleMenu.value);
   return `/avatars/vector/${vectorKind.value}?${q.toString()}`;
 });
 
@@ -194,7 +190,7 @@ function openInNewTab() {
             </select>
           </label>
           <label class="field field--half">
-            <span class="field__label">Стиль</span>
+            <span class="field__label">Форма</span>
             <select v-model="styleMenu" class="field__input field__select">
               <option v-for="s in styleOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
             </select>

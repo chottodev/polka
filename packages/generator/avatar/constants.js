@@ -4,7 +4,6 @@ const AVATAR_KIND_KEYS = Object.freeze([
   'man',
   'male',
   'female',
-  'neutral',
   'cat',
   'dog',
   'panda',
@@ -12,7 +11,7 @@ const AVATAR_KIND_KEYS = Object.freeze([
 ]);
 
 const AVATAR_ANIMAL_KIND_KEYS = Object.freeze(['cat', 'dog', 'panda', 'fox']);
-const AVATAR_HUMAN_KIND_KEYS = Object.freeze(['male', 'female', 'neutral']);
+const AVATAR_HUMAN_KIND_KEYS = Object.freeze(['male', 'female']);
 
 const AVATAR_STYLE_KEYS = Object.freeze(['flat', 'outline', 'duotone']);
 const AVATAR_PALETTE_KEYS = Object.freeze(['soft', 'vivid', 'earth', 'mono', 'ocean']);
