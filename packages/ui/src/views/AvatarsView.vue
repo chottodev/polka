@@ -5,7 +5,7 @@ import ColorPickerButton from '../components/ColorPickerButton.vue';
 const baseOrigin = typeof window !== 'undefined' ? window.location.origin.replace(/\/$/, '') : '';
 const mode = ref('initials');
 
-const size = ref(48);
+const size = ref(256);
 const palette = ref('soft');
 const bg = ref('');
 const fg = ref('');
@@ -15,8 +15,9 @@ const initialsText = ref('AB');
 const family = ref('arial');
 const font = ref('');
 
-const vectorKind = ref('male');
-const style = ref('flat');
+const vectorKind = ref('man');
+const style = ref('round');
+const shape = ref('round');
 
 const familyOptions = [
   { value: 'system', label: 'Системный' },
@@ -38,9 +39,8 @@ const familyOptions = [
 
 const sizeOptions = [16, 32, 48, 64, 72, 96, 128, 192, 256, 384, 512];
 const styleOptions = [
-  { value: 'flat', label: 'Flat' },
-  { value: 'outline', label: 'Outline' },
-  { value: 'duotone', label: 'Duotone' },
+  { value: 'round', label: 'Round' },
+  { value: 'square', label: 'Square' },
 ];
 const paletteOptions = [
   { value: 'soft', label: 'Soft' },
@@ -50,14 +50,14 @@ const paletteOptions = [
   { value: 'ocean', label: 'Ocean' },
 ];
 const vectorKinds = [
-  { value: 'male', label: 'Мужской' },
+  { value: 'man', label: 'Мужской' },
   { value: 'female', label: 'Женский' },
-  { value: 'neutral', label: 'Нейтральный' },
   { value: 'cat', label: 'Cat' },
   { value: 'dog', label: 'Dog' },
   { value: 'panda', label: 'Panda' },
   { value: 'fox', label: 'Fox' },
 ];
+
 
 const builtPath = computed(() => {
   const q = new URLSearchParams();
@@ -74,8 +74,21 @@ const builtPath = computed(() => {
     return `/avatars/initials/${text}?${q.toString()}`;
   }
 
-  if (style.value) q.set('style', style.value);
+  if (style.value) q.set('style', styleMenu.value);
   return `/avatars/vector/${vectorKind.value}?${q.toString()}`;
+});
+
+const styleMenu = computed({
+  get() {
+    return shape.value === 'round' || shape.value === 'square' ? shape.value : style.value;
+  },
+  set(v) {
+    if (v === 'round' || v === 'square') {
+      shape.value = v;
+      return;
+    }
+    style.value = v;
+  },
 });
 
 const fullUrl = computed(() => (baseOrigin ? `${baseOrigin}${builtPath.value}` : builtPath.value));
@@ -177,8 +190,8 @@ function openInNewTab() {
             </select>
           </label>
           <label class="field field--half">
-            <span class="field__label">Стиль</span>
-            <select v-model="style" class="field__input field__select">
+            <span class="field__label">Форма</span>
+            <select v-model="styleMenu" class="field__input field__select">
               <option v-for="s in styleOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
             </select>
           </label>
@@ -227,7 +240,12 @@ function openInNewTab() {
         <div class="preview">
           <span class="field__label">Превью</span>
           <div class="preview__box">
-            <img :src="editableUrl" alt="Превью аватара" class="preview__img" />
+            <img
+              :src="editableUrl"
+              alt="Превью аватара"
+              class="preview__img"
+              :class="{ 'preview__img--round': shape === 'round' }"
+            />
           </div>
         </div>
       </aside>
@@ -386,5 +404,8 @@ function openInNewTab() {
   max-width: 100%;
   height: auto;
   margin: 0 auto;
+}
+.preview__img--round {
+  border-radius: 50%;
 }
 </style>

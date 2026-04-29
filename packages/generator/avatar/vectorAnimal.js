@@ -4,6 +4,8 @@ const { parseSize, pickPalette, pickStyle, normalizeHex, seededIndex } = require
 const { AVATAR_ANIMAL_KIND_KEYS } = require('./constants');
 const { generateAvatarVectorPanda } = require('./vectorPanda');
 const { generateAvatarVectorFox } = require('./vectorFox');
+const { generateAvatarVectorDog } = require('./vectorDog');
+const { generateAvatarVectorCat } = require('./vectorCat');
 
 function getKindBySeed(kind, seed) {
   if (kind && kind !== 'animal') return kind;
@@ -44,6 +46,12 @@ function generateAvatarVectorAnimal({
   }
   if (face === 'fox') {
     return generateAvatarVectorFox({ size, bg, seed });
+  }
+  if (face === 'dog') {
+    return generateAvatarVectorDog({ size, bg, seed });
+  }
+  if (face === 'cat') {
+    return generateAvatarVectorCat({ size, bg, seed });
   }
 
   const bgHex = normalizeHex(bg, p.bg);

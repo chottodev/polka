@@ -9,7 +9,7 @@ function styleStroke(style, color) {
 }
 
 function generateAvatarVectorHuman({
-  kind = 'neutral',
+  kind = 'male',
   size,
   palette,
   style,
@@ -34,9 +34,7 @@ function generateAvatarVectorHuman({
   const hairPath =
     kind === 'female'
       ? `<path d="M32 20c10 0 17 8 17 17v6H15v-6c0-9 7-17 17-17z" ${styleStroke(st, line)}/>`
-      : kind === 'male'
-      ? `<path d="M18 28c0-9 7-16 14-16 8 0 14 7 14 16v5H18z" ${styleStroke(st, line)}/>`
-      : `<path d="M20 27c1-8 7-13 12-13s11 5 12 13v4H20z" ${styleStroke(st, line)}/>`;
+      : `<path d="M18 28c0-9 7-16 14-16 8 0 14 7 14 16v5H18z" ${styleStroke(st, line)}/>`;
 
   const accessory =
     variant === 1

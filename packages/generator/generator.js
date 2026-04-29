@@ -4,6 +4,8 @@
  */
 
 const { generateAvatarInitials } = require('./avatar/initials');
+const { generateAvatarVectorMan } = require('./avatar/vectorMan');
+const { generateAvatarVectorFemale } = require('./avatar/vectorFemale');
 const { generateAvatarVectorHuman } = require('./avatar/vectorHuman');
 const { generateAvatarVectorAnimal } = require('./avatar/vectorAnimal');
 const {
@@ -128,10 +130,25 @@ function generateAvatar({ initials, bg, fg, size, fontSize, family, palette }) {
 }
 
 function generateAvatarVector({ kind, size, palette, style, bg, fg, seed }) {
-  if (AVATAR_HUMAN_KIND_KEYS.includes(String(kind))) {
-    return generateAvatarVectorHuman({ kind, size, palette, style, bg, fg, seed });
+  function applyRoundStyle(svg) {
+    if (String(style) !== 'round' || typeof svg !== 'string') return svg;
+    const openTagMatch = svg.match(/^<svg\b[^>]*>/);
+    if (!openTagMatch) return svg;
+    const openTag = openTagMatch[0];
+    const inner = svg.slice(openTag.length).replace(/<\/svg>\s*$/, '');
+    return `${openTag}<defs><clipPath id="avatarRoundClip"><circle cx="50%" cy="50%" r="50%"/></clipPath></defs><g clip-path="url(#avatarRoundClip)">${inner}</g></svg>`;
   }
-  return generateAvatarVectorAnimal({ kind, size, palette, style, bg, fg, seed });
+
+  if (String(kind) === 'man') {
+    return applyRoundStyle(generateAvatarVectorMan({ size, bg, seed }));
+  }
+  if (String(kind) === 'female') {
+    return applyRoundStyle(generateAvatarVectorFemale({ size, bg, seed }));
+  }
+  if (AVATAR_HUMAN_KIND_KEYS.includes(String(kind))) {
+    return applyRoundStyle(generateAvatarVectorHuman({ kind, size, palette, style, bg, fg, seed }));
+  }
+  return applyRoundStyle(generateAvatarVectorAnimal({ kind, size, palette, style, bg, fg, seed }));
 }
 
 // ── Pattern placeholder ──────────────────────────────────────────────
@@ -188,6 +205,8 @@ module.exports = {
   generateAvatar,
   generateAvatarInitials,
   generateAvatarVector,
+  generateAvatarVectorMan,
+  generateAvatarVectorFemale,
   generateAvatarVectorHuman,
   generateAvatarVectorAnimal,
   generatePattern,
