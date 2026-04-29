@@ -38,7 +38,9 @@ function pickPalette(paletteKey) {
 }
 
 function pickStyle(styleKey) {
-  return AVATAR_STYLE_KEYS.includes(String(styleKey)) ? styleKey : 'flat';
+  const k = String(styleKey || '');
+  if (k === 'round' || k === 'square') return 'flat';
+  return AVATAR_STYLE_KEYS.includes(k) ? k : 'flat';
 }
 
 function hashSeed(str) {

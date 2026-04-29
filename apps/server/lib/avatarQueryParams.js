@@ -30,7 +30,11 @@ const styleParam = {
   name: 'style',
   in: 'query',
   required: false,
-  schema: { type: 'string', enum: [...AVATAR_STYLE_KEYS] },
+  schema: {
+    type: 'string',
+    enum: [...AVATAR_STYLE_KEYS, 'round', 'square'],
+    description: 'flat | outline | duotone — стиль заливки; round | square — маска (клип) для векторных аватаров',
+  },
 };
 
 const seedParam = {
