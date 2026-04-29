@@ -1,6 +1,6 @@
 {
   "name": "polka",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "description": "Placeholder API server",
   "main": "index.js",
